@@ -22,9 +22,9 @@ class Login:
     def __post_init__(self):
         try:
             valid = search(
-                r'|'.join(
+                '|'.join(
                     [
-                        '(?P<cpf>^\d{3}.?\d{3}.?\d{3}.?\d{2}$)',
+                        '(?P<cpf>^\d{3}\.?\d{3}\.?\d{3}\-?\d{2}$)',
                         '(?P<email>^([a-zA-Z0-9\.]+)@([a-zA-Z0-9]+.\w+[.\w+]+?)$)',
                         '(?P<phone>^\+?[\ \d]{8,}$)',
                         '(?P<user>^[a-zA-Z0-9]+$)',
@@ -42,9 +42,9 @@ class Login:
             }
             type_pass = {kk: vv for kk, vv in valid_pass.items() if vv != None}
 
-            if 'cpf' in type_user and cpf_validate(valid.group(0)):
-                self.type_user = list(type_user)[0]
-                self.user = valid.group(0)
+            if 'cpf' in type_user:
+                self.type_user = list(type_user)[0] if cpf_validate(valid.group(0)) else "user"
+                self.user = str(valid.group(0)).replace("-", "").replace(".", "")
             else:
                 self.type_user = list(type_user)[0]
                 self.user = valid.group(0)
